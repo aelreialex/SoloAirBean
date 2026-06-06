@@ -1,0 +1,442 @@
+info:
+    title: Airbeans API
+    description: API Documentation for Airbeans
+    version: 1.0.0
+openapi: 3.0.1
+components:
+    schema:
+        cartItem:
+            type: object
+            properties:
+                productId:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+                title:
+                    type: string
+                    example: produkt
+                price:
+                    type: number
+                    example: 50
+                quantity:
+                    type: number
+                    example: 2
+                _id:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+        cart:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+                userId:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+                guest:
+                    type: boolean
+                    example: true
+                items:
+                    type: array
+                    items:
+                        $ref: "#/components/schema/cartItem"
+                totalPrice:
+                    type: number
+                    example: 100
+        order:
+            type: object
+            properties:
+                _id:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+                userId:
+                    type: string
+                    example: xxxxxxxxxxxxxxxx
+                items:
+                    type: array
+                    items:
+                        $ref: "#/components/schema/cartItem"
+                totalPrice:
+                    type: number
+                    example: 100
+    responses:
+        BadRequestResponse:
+            description: Response for bad request
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            success:
+                                type: boolean
+                                example: false
+                            message:
+                                type: string
+                                example: Invalid request
+        UnauthorizedResponse:
+            description: Response for anauthorized request
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            success:
+                                type: boolean
+                                example: false
+                            message:
+                                type: string
+                                example: Unauthorized request
+        NotFoundResponse:
+            description: Response for resource not found
+            content:
+                application/json:
+                    schema:
+                        type: object
+                        properties:
+                            success:
+                                type: boolean
+                                example: false
+                            message:
+                                type: string
+                                example: The requested resource/s was not found
+    parameters:
+        ApiKeyHeader:
+            in: header
+            name: x-api-key
+            required: true
+            schema:
+                type: string
+                example: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+
+paths:
+    /api/keys:
+        get:
+            tags:
+                - API Keys
+            description: Get a random API key
+            content:
+                aplication/json:
+                    schema:
+                        type: object
+                        properties:
+                            success:
+                                type: boolean
+                                example: true
+                            key:
+                                type: string
+                                example: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+            responses:
+                "200":
+                    description: Api keys successfully retrieved
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    key:
+                                        type: string
+                                        example: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+    /api/auth/register:
+        post:
+            tags:
+                - Authentication
+            description: Register a new user
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                    example: user123
+                                password:
+                                    type: string
+                                    example: password123
+            responses:
+                "201":
+                    description: response for successful registration
+                    content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                success:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: User registered successfully
+                "400":
+                    $ref: "#/components/responses/BadRequestResponse"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+    /api/auth/login:
+        post:
+            tags:
+                - Authentication
+            description: Login to the application
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                username:
+                                    type: string
+                                    example: user123
+                                password:
+                                    type: string
+                                    example: password123
+            responses:
+                "201":
+                    description: response for successful login
+                    content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                success:
+                                    type: boolean
+                                    example: true
+                                message:
+                                    type: string
+                                    example: User logged in successfully
+                "400":
+                    $ref: "#/components/responses/BadRequestResponse"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+    /api/menu:
+        get:
+            tags:
+                - Menu
+            description: Returns all menu products
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            responses:
+                "200":
+                    description: Response containing all products in the menu
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Menu successfully retrieved
+                                    menu:
+                                        type: object
+                                        properties:
+                                            _id:
+                                                type: string
+                                                example: xxxxxxxxxxxxxxxx
+                                            title:
+                                                type: string
+                                                example: produkt
+                                            desc:
+                                                type: string
+                                                example: beskriving av produkt
+                                            price:
+                                                type: number
+                                                exammple: 22
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+    /api/carts:
+        get:
+            tags:
+                - Carts
+            description: returns all carts
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            responses:
+                "200":
+                    description: Response containing all carts
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: All carts succesfully retrieved
+                                    carts:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schema/cart"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+        patch:
+            tags:
+                - Carts
+            description: modifies a cart. If user, only prodId and qty is needed. If guest, only prodId and qty needed to first create cart, then to continue using the cart cartId is needed.
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                cartId:
+                                    type: string
+                                    example: xxxxxxxxxxxxxxxx
+                                prodId:
+                                    type: string
+                                    example: xxxxxxxxxxxxxxxx
+                                qty:
+                                    type: number
+                                    example: 2
+            responses:
+                "200":
+                    description: Response containing all carts
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Cart succesfully updated
+                                    cart:
+                                        $ref: "#/components/schema/cart"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
+                "400":
+                    $ref: "#/components/responses/BadRequestResponse"
+    /api/carts/{id}:
+        get:
+            tags:
+                - Carts
+            description: Fetches a cart with a matching ID
+            paramters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            responses:
+                "200":
+                    description: Response containng a cart matching the corresponding id
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Cart successfully retrieved
+                                    cart:
+                                        $ref: "#/components/schema/cart"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
+    /api/orders:
+        get:
+            tags:
+                - Orders
+            description: returns all orders
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            responses:
+                "200":
+                    description: Response containing all carts
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: All orders succesfully retrieved
+                                    orders:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schema/order"
+        post:
+            tags:
+                - Orders
+            description: returns all orders
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                cartId:
+                                    type: string
+                                    example: xxxxxxxxxxxx
+            responses:
+                "200":
+                    description: Response containing all carts
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Order successfully created
+                                    order:
+                                        $ref: "#/components/schema/order"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
+    /api/orders/{userId}:
+        get:
+            tags:
+                - Orders
+            description: Fetches an order with a matching ID
+            paramters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            responses:
+                "200":
+                    description: Response containg all orders for the matching userId
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: Orders successfully retrieved
+                                    orders:
+                                        type: array
+                                        items:
+                                            $ref: "#/components/schema/order"
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
