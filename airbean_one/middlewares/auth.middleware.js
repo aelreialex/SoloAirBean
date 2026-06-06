@@ -11,6 +11,23 @@ export const authorizeUser = (req, res, next) => {
   next();
 };
 
+export const authorizeAdmin = (req, res, next) => {
+  const user = global.user;
+  if (!user) {
+    return next({
+      status: 401,
+      message: "Admin not logged in",
+    });
+  }
+  if (user.role !== "admin"){
+    return next({
+      status: 401,
+      message: "Only admin can access this function"
+    })
+  }
+  next();
+};
+
 export const authenticateKey = async (req, res, next) => {
   const key = req.headers["x-api-key"];
 

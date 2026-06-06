@@ -9,6 +9,7 @@ import cartRouter from "./routes/cart.route.js";
 import apiKeysRouter from "./routes/api_keys.route.js";
 import ordersRouter from "./routes/orders.route.js";
 import swaggerUI from "swagger-ui-express";
+import keysRoute from "./routes/keys.route.js"
 import YAML from "yamljs";
 
 const app = express();
@@ -25,7 +26,7 @@ app.use(logger);
 
 app.use("/api/auth", authRouter);
 app.use("/api/menu", menuRouter);
-app.use("/api/carts", cartRouter);
+app.use("/api/cart", cartRouter);
 app.use("/api/keys", apiKeysRouter);
 app.use("/api/orders", ordersRouter);
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));

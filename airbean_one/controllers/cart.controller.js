@@ -43,6 +43,7 @@ export const patchCart = async (req, res, next) => {
   const body = req.body;
   const user = global.user;
   const productExists = await menuService.getProductById(body.prodId);
+  console.log(productExists)
 
   if (!productExists.success) {
     return next({
