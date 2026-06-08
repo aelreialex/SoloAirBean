@@ -1,4 +1,7 @@
 import * as authService from "../services/auth.service.js";
+import { comparePassword, hashPassword } from "../utils/bcrypt.utils.js";
+import { signToken } from "../utils/jwt.utils.js";
+import dotenv from "dotenv";
 
 // Register user
 export const registerUser = async (req, res, next) => {
@@ -22,7 +25,7 @@ export const registerUser = async (req, res, next) => {
 
   const result = await authService.registerUser({
     username: newUser.username,
-    password: newUser.password,
+    password: await hashPassword(newUser.password),
     role: newUser.role,
   });
 
@@ -54,13 +57,17 @@ export const loginUser = async (req, res, next) => {
   const result = await authService.getUser(user.username);
 
   if (result.success) {
-    if (user.password === result.user.password) {
-      global.user = result.user;
-      console.log(global.user);
+    if (await comparePassword(user.password, result.user.password)) {
+      const token = signToken({
+          userid : result.user._id,
+          username : result.user.username,
+          role: result.user.role
+      })
 
       res.status(201).json({
         success: true,
         message: "User logged in successfully",
+        token
       });
     } else {
       return next({

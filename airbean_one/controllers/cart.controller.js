@@ -1,6 +1,7 @@
 import * as menuService from "../services/menu.service.js";
 import * as cartService from "../services/cart.service.js";
 import * as authService from "../services/auth.service.js";
+import { verifyToken } from "../utils/jwt.utils.js";
 
 export const getCarts = async (req, res, next) => {
   const result = await cartService.getCarts();
@@ -41,8 +42,8 @@ export const patchCart = async (req, res, next) => {
   let newCart;
   let newGuestCart = false;
   const body = req.body;
-  const user = global.user;
   const productExists = await menuService.getProductById(body.prodId);
+  const user = req.user;
   console.log(productExists)
 
   if (!productExists.success) {
@@ -54,7 +55,7 @@ export const patchCart = async (req, res, next) => {
 
   // User cart
   if (user) {
-    const userCartExists = await cartService.getCartByUserId(user._id);
+    const userCartExists = await cartService.getCartByUserId(user.userid);
     //Check if cart exists already
     if (userCartExists.success) {
       //Cart exists, updating with new product value
@@ -68,7 +69,7 @@ export const patchCart = async (req, res, next) => {
       newCart = await cartService.createCart(
         productExists.product,
         body.qty,
-        user._id,
+        user.userid,
       );
     }
   }

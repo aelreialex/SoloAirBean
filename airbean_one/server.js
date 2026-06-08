@@ -26,7 +26,7 @@ app.use(logger);
 
 app.use("/api/auth", authRouter);
 app.use("/api/menu", menuRouter);
-app.use("/api/cart", cartRouter);
+app.use("/api/carts", cartRouter);
 app.use("/api/keys", apiKeysRouter);
 app.use("/api/orders", ordersRouter);
 app.use('/api/docs', swaggerUI.serve, swaggerUI.setup(swaggerDocs));

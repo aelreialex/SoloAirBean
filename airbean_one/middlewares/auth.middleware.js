@@ -1,18 +1,55 @@
 import { keyExists } from "../services/api_keys.service.js";
+import { verifyToken } from "../utils/jwt.utils.js";
 
-export const authorizeUser = (req, res, next) => {
-  const user = global.user;
-  if (!user) {
-    next({
-      status: 401,
-      message: "User not logged in",
-    });
-  }
-  next();
-};
+// export const authorizeUser = (req, res, next) => {
+//   const user = global.user;
+//   if (!user) {
+//     next({
+//       status: 401,
+//       message: "User not logged in",
+//     });
+//   }
+//   next();
+// };
+
+export const authorizeUserToken = (req, res, next) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+    if(!token) {
+        next({
+            status : 400,
+            message : 'No token provided'
+        })
+    }
+    const verified = verifyToken(token);
+    if(!verified.success) {
+        next({
+            status : 401,
+            message : verified.message
+        });
+    }
+
+    req.user = verified.user;
+    console.log(req.user);
+    next();
+}
 
 export const authorizeAdmin = (req, res, next) => {
-  const user = global.user;
+  const token = req.headers['authorization']?.split(' ')[1];
+  if(!token) {
+        next({
+            status : 400,
+            message : 'No token provided'
+        })
+    }
+  const verified = verifyToken(token);
+      if(!verified.success) {
+      next({
+          status : 401,
+          message : verified.message
+      });
+    }
+  req.user = verified.user;
+  const user = req.user;
   if (!user) {
     return next({
       status: 401,
@@ -74,3 +111,14 @@ export const authenticateBody = async (req, res, next) => {
 
   next();
 };
+
+export const authenticateToken = async (req, res, next) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  const verified = verifyToken(token);
+  if(verified.success){
+    req.user = verified.user;
+    const user = req.user;
+    console.log(user)
+  }
+  next();
+}

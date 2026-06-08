@@ -71,7 +71,7 @@ export const updateProduct = async (req, res,next) =>  {
 
 	res.json({
 		success: result.success,
-		product: result.updatedProductInfo
+		product: result
 	})
 }
 

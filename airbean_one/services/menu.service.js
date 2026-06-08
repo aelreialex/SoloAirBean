@@ -79,40 +79,59 @@ export const deleteProductById = async (prodId) => {
 	}
 };
 
-export const updateProduct = async (prodId, updatedProduct) => {
-	try {
-		const result = await Product.findOne({prodId: prodId.prodId})
+// export const updateProduct = async (prodId, updatedProduct) => {
+// 	try {
+// 		const result = await Product.findOne({prodId: prodId.prodId})
 
-		console.log(result)		
+// 		console.log(result)		
 
-		if(!result){
-			return {
-				status: 404,
-				message: "No product was found with the provided productID",
-			};
-		}
-		if(!updatedProduct.title || !updatedProduct.desc || !updatedProduct.price){
-			return {
-				status: 400,
-				message: "Please provide a title, desc and price in your JSON body"
-			}
-		}
+// 		if(!result){
+// 			return {
+// 				status: 404,
+// 				message: "No product was found with the provided productID",
+// 			};
+// 		}
+// 		if(!updatedProduct.title && !updatedProduct.desc && !updatedProduct.price){
+// 			return {
+// 				status: 400,
+// 				message: "Please provide a title, desc or price in your JSON body"
+// 			}
+// 		}
 
-		result.title = updatedProduct.title;
-		result.desc = updatedProduct.desc;
-		result.price = updatedProduct.price;
-		result.modifiedAt = Date.now()
-		const updatedProductInfo = await result.save();
+// 		result.title = updatedProduct.title || result.title;
+// 		result.desc = updatedProduct.desc || result.desc;
+// 		result.price = updatedProduct.price || result.price;
+// 		result.modifiedAt = Date.now()
+// 		const updatedProductInfo = await result.save();
 
-		return {
-			success: true,
-			updatedProductInfo
-		};
+// 		return {
+// 			success: true,
+// 			updatedProductInfo
+// 		};
 		
-	} catch (error) {
+// 	} catch (error) {
+// 		return {
+// 			success: false,
+// 			message: error.message,
+// 		};
+// 	}
+// }
+
+export const updateProduct = async (prodId, updatedProduct) => {
+try {
+	updatedProduct.modifiedAt = Date.now();
+	console.log(prodId.prodId)
+	console.log(updatedProduct.modifiedAt);
+	const result = await Product.findOneAndUpdate(
+		{ prodId: prodId.prodId },
+		updatedProduct,
+		{ returnDocument: 'after' }
+	);
+	return result
+} catch (error) {
 		return {
 			success: false,
 			message: error.message,
 		};
-	}
+}
 }
