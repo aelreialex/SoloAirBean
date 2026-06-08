@@ -106,7 +106,15 @@ components:
             schema:
                 type: string
                 example: xxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-
+        UrlProdId:
+            in: url
+            name: prodId
+            required: true
+            description: The unique product ID to update
+            schema:
+                type: string
+                example: /api/menu/prod-b7ee0
+        
 paths:
     /api/keys:
         get:
@@ -252,6 +260,162 @@ paths:
                                                 exammple: 22
                 "401":
                     $ref: "#/components/responses/UnauthorizedResponse"
+        post:
+            tags:
+                - Menu
+            description: Posts a new product to the database
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    example: Ostbollsmacka
+                                desc:
+                                    type: string
+                                    example: En macka med krossade ostbollar innuti
+                                price:
+                                    type: number,
+                                    example: 44
+            responses:
+                "200":
+                    description: Response containing all products in the menu
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: New product created
+                                    product:
+                                        type: object
+                                        properties:
+                                            prodId:
+                                                type: string
+                                                example: xxxxxxxxxxxxxxxx
+                                            title:
+                                                type: string
+                                                example: produkt
+                                            desc:
+                                                type: string
+                                                example: beskriving av produkt
+                                            price:
+                                                type: number
+                                                exammple: 22
+                                            _id:
+                                                type: string
+                                                example: xxxxxxxxxxxxxxxxxx
+                                            createdAt:
+                                                type: number
+                                                example: 2026-06-07xxxxxxxxx
+                                            __v:
+                                                type: number
+                                                example: 0
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "400":
+                    $ref: "#/components/responses/BadRequestResponse"
+    /api/menu/{prodId}:
+        put:
+            tags:
+                - Menu
+            description: Updates product information of a product
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+                - $ref: "#/components/parameters/UrlProdId"
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: object
+                            properties:
+                                title:
+                                    type: string
+                                    example: Ostbollsmacka
+                                desc:
+                                    type: string
+                                    example: En macka med krossade ostbollar innuti
+                                price:
+                                    type: number,
+                                    example: 44
+            responses:
+                "200":
+                    description: Response succesfully updated product
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: 
+                                    product:
+                                        type: object
+                                        properties:
+                                            prodId:  
+                                                type: string
+                                                example: xxxxxxxxxxxxxxxxxx
+                                            _id:
+                                                type: string
+                                                example: xxxxxxxxxxxxxxxx
+                                            title:
+                                                type: string
+                                                example: produkt
+                                            desc:
+                                                type: string
+                                                example: beskriving av produkt
+                                            price:
+                                                type: number
+                                                exammple: 22
+
+                                            createdAt:
+                                                type: number
+                                                example: 2026-06-07xxxxxxxxx
+                                            __v:
+                                                type: number
+                                                example: 0
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "400":
+                    $ref: "#/components/responses/BadRequestResponse"
+        delete:
+            tags:
+                - Menu
+            description: Deletes a product from the menu and the database
+            parameters:
+                - $ref: "#/components/parameters/ApiKeyHeader"
+                - $ref: "#/components/parameters/UrlProdId"
+            responses:
+                "200":
+                    description: Response containing all products in the menu
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    success:
+                                        type: boolean
+                                        example: true
+                                    message:
+                                        type: string
+                                        example: xxxxx is now deleted from the database
+                "401":
+                    $ref: "#/components/responses/UnauthorizedResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
     /api/carts:
         get:
             tags:

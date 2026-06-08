@@ -16,6 +16,6 @@ router.get(
   cartController.getCartById,
 );
 
-router.patch("/", validateCartPatch, cartController.patchCart);
+router.patch("/", authMiddleware.authenticateToken ,validateCartPatch, cartController.patchCart);
 
 export default router;

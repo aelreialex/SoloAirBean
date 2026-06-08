@@ -9,6 +9,7 @@ import cartRouter from "./routes/cart.route.js";
 import apiKeysRouter from "./routes/api_keys.route.js";
 import ordersRouter from "./routes/orders.route.js";
 import swaggerUI from "swagger-ui-express";
+import keysRoute from "./routes/keys.route.js"
 import YAML from "yamljs";
 
 const app = express();
