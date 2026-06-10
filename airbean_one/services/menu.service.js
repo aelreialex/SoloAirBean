@@ -59,14 +59,6 @@ export const deleteProductById = async (prodId) => {
 	try {
 		const result = await Product.findOneAndDelete({ prodId });
 		console.log(result)
-
-		if (!result) {
-			return {
-				status: 404,
-				message: "No product was found with the provided productID",
-			};
-		}
-
 		return {
 			success: true,
 			result
