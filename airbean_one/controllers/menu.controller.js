@@ -45,12 +45,12 @@ export const newProduct = async (req, res, next) => {
 	});
 	
 	if (result.status) {
-	return next({
-	  status: result.status,
-	  message: result.message
+		return next({
+			status: result.status,
+			message: result.message
 	})};
 
-	res.json({
+	return res.status(201).json({
 		success: true,
 		message: "Product created",
 		product: result.newProduct
@@ -63,16 +63,17 @@ export const updateProduct = async (req, res,next) =>  {
 
 	const result = await menuService.updateProduct(product, newProduct);
 
-	if (result.status) {
-	return next({
-	  status: result.status,
-	  message: result.message
-	})};
-
-	res.json({
-		success: result.success,
-		product: result
-	})
+	if(!result){
+		return next({
+        	status: 404,
+        	message: "No product found with the provided prodId"
+        });
+	}
+	return res.status(200).json({
+        success: true,
+        message: "Product updated",
+        product: result
+    });
 }
 
 
@@ -82,15 +83,14 @@ export const deleteProduct = async (req, res, next) => {
 
 	const result = await menuService.deleteProductById(prodId)
 
-	if(result.status) {
+	if(!result.result)
 		return next({
-			status: result.status,
-			message: result.message
-		})
-	}
+			status: 404,
+			message: "No product found with the provided prodId"   
+	});
 
-	res.json({
-		success: result.success,
+	return res.status(200).json({
+		success: true,
 		message: result.result.title + " Is now deleted from the database"
 	})
 }
