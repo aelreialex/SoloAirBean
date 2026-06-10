@@ -283,7 +283,7 @@ paths:
                                     type: number,
                                     example: 44
             responses:
-                "200":
+                "201":
                     description: Response containing all products in the menu
                     content:
                         application/json:
@@ -346,7 +346,7 @@ paths:
                                     type: string
                                     example: En macka med krossade ostbollar innuti
                                 price:
-                                    type: number,
+                                    type: number
                                     example: 44
             responses:
                 "200":
@@ -379,10 +379,10 @@ paths:
                                                 example: beskriving av produkt
                                             price:
                                                 type: number
-                                                exammple: 22
+                                                example: 22
 
                                             createdAt:
-                                                type: number
+                                                type: string
                                                 example: 2026-06-07xxxxxxxxx
                                             __v:
                                                 type: number
@@ -391,6 +391,8 @@ paths:
                     $ref: "#/components/responses/UnauthorizedResponse"
                 "400":
                     $ref: "#/components/responses/BadRequestResponse"
+                "404":
+                    $ref: "#/components/responses/NotFoundResponse"
         delete:
             tags:
                 - Menu
@@ -400,7 +402,7 @@ paths:
                 - $ref: "#/components/parameters/UrlProdId"
             responses:
                 "200":
-                    description: Response containing all products in the menu
+                    description: Response includes deleted item
                     content:
                         application/json:
                             schema:
